@@ -94,7 +94,7 @@ Cliente React (chamando a API)
 
 ```ts
 // Componente React
-import { trpc } from './client/trpc';
+import { trpc } from "./client/trpc";
 
 function UserComponent() {
   // Consulta GET
@@ -103,8 +103,8 @@ function UserComponent() {
   // Mutação POST
   const createUser = () => {
     trpc.user.create.mutate({
-      name: 'João Silva',
-      email: 'joao@exemplo.com'
+      name: "João Silva",
+      email: "joao@exemplo.com"
     });
   };
 
@@ -131,7 +131,7 @@ const appRouter = router({
 });
 
 // Cliente (React)
-const { data } = trpc.getUser.useQuery({ id: '123' });
+const { data } = trpc.getUser.useQuery({ id: "123" });
 ```
 
 
@@ -159,7 +159,7 @@ Middleware de Autenticação:
 // auth.ts
 export const authMiddleware = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session?.user) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
@@ -201,6 +201,41 @@ trpc.user.update.mutate({
 });
 ```
 
+Criptografia de senha antes do armazenamento:
+
+```ts
+
+export const userRouter = router({
+  create: publicProcedure
+    .input(z.object({
+      name: z.string(),
+      email: z.string().email(),
+      password: z.string().min(6),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        return await prisma.user.create({
+          data: {
+            name: input.name,
+            email: input.email,
+            password: await hash(input.password, 12), // Hash da senha
+          },
+          select: { // Seleção explícita de campos
+            id: true,
+            name: true,
+            email: true,
+            createdAt: true,
+          }
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Falha na criação do usuário",
+        });
+      }
+    }),
+```
+
 ### Configuração do Cliente
 
 Conexão com Servidor:
@@ -210,9 +245,9 @@ Conexão com Servidor:
 export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3000/trpc',
+      url: "http://localhost:3000/trpc",
       headers: () => ({
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       })
     })
   ]
