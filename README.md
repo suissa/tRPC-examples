@@ -1,3 +1,5 @@
+![Logo tRPC](https://trpc.io/img/logo-text-black.svg)
+
 # Por que usar tRPC? 🚀
 
 **tRPC (TypeScript Remote Procedure Call)** é uma ferramenta revolucionária para construir APIs **totalmente tipadas** com TypeScript. Eis por que você deveria considerar usá-la:
@@ -94,7 +96,7 @@ Cliente React (chamando a API)
 
 ```ts
 // Componente React
-import { trpc } from "./client/trpc";
+import { trpc } from './client/trpc';
 
 function UserComponent() {
   // Consulta GET
@@ -103,8 +105,8 @@ function UserComponent() {
   // Mutação POST
   const createUser = () => {
     trpc.user.create.mutate({
-      name: "João Silva",
-      email: "joao@exemplo.com"
+      name: 'João Silva',
+      email: 'joao@exemplo.com'
     });
   };
 
@@ -131,7 +133,7 @@ const appRouter = router({
 });
 
 // Cliente (React)
-const { data } = trpc.getUser.useQuery({ id: "123" });
+const { data } = trpc.getUser.useQuery({ id: '123' });
 ```
 
 
@@ -159,7 +161,7 @@ Middleware de Autenticação:
 // auth.ts
 export const authMiddleware = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
   return next({
     ctx: {
@@ -229,8 +231,8 @@ export const userRouter = router({
         });
       } catch (error) {
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Falha na criação do usuário",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Falha na criação do usuário',
         });
       }
     }),
@@ -245,9 +247,9 @@ Conexão com Servidor:
 export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: "http://localhost:3000/trpc",
+      url: 'http://localhost:3000/trpc',
       headers: () => ({
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       })
     })
   ]
