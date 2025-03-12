@@ -1,5 +1,73 @@
 ![Logo tRPC](https://trpc.io/img/logo-text-black.svg)
 
+
+O tRPC (TypeScript Remote Procedure Call) é uma biblioteca para construção de APIs tipadas em TypeScript, projetada para facilitar a comunicação cliente-servidor com segurança de tipos estáticos. Ele permite que desenvolvedores definam endpoints (chamados de "procedures") no servidor e os consumam no cliente com validação e autocompletar inteligente, garantindo consistência de tipos em tempo de compilação.
+
+## Arquitetura e Componentes Principais
+
+1. Router (Roteador)
+
+- Estrutura hierárquica que organiza as procedures (endpoints). Um router pode conter:
+- Procedures: Funções remotas (como query para GET e mutation para POST/PUT/DELETE).
+- Middlewares: Funções executadas antes das procedures para validação, autenticação, etc.
+- Sub-routers: Para modularização (ex: /users, /posts).
+
+2. Procedures
+
+- São os endpoints da API, definidos com:
+- Input Validation: Usando bibliotecas como Zod para validar dados de entrada.
+- Context: Dados compartilhados entre middlewares e procedures (ex: sessão do usuário).
+- Output: Tipagem explícita do retorno.
+
+
+3. Cliente tRPC
+
+- Gera um cliente tipado automaticamente com base no router do servidor. Oferece:
+- Tipagem Estática: Autocompletar e verificação de erros no cliente.
+- Batching: Combinação automática de requisições para otimização.
+
+## Fluxo de Comunicação
+
+1. Definição do Servidor
+
+- Criação do router com procedures.
+-Configuração de middlewares (ex: autenticação).
+-Exposição via HTTP (usando adaptadores como Express ou Next.js).
+
+Geração de Tipos
+
+- O tipo AppRouter é exportado do servidor.
+- Importado no cliente para inferência de tipos.
+
+Chamada do Cliente
+
+- Métodos como .query() ou .mutation() são usados com tipos validados.
+- Erros são tratados de forma tipada (ex: TRPCError).
+
+## Principais Recursos Técnicos
+
+1. Segurança de Tipos End-to-End
+
+- Tipos são compartilhados entre cliente e servidor via AppRouter.
+- Erros de tipo são capturados em tempo de compilação.
+
+2. Validação com Zod
+
+- Schemas definem a estrutura esperada dos dados.
+- Validação ocorre antes da execução da procedure.
+
+3. Middlewares
+
+- Interceptam requisições para lógica transversal.
+- Exemplo: Autenticação JWT.
+
+4. Integração com Frameworks
+
+- Next.js: Rota API interna com createNextApiHandler.
+- Express: Middleware tradicional.
+- React/Node.js: Suporte nativo.
+
+
 # Por que usar tRPC? 🚀
 
 **tRPC (TypeScript Remote Procedure Call)** é uma ferramenta revolucionária para construir APIs **totalmente tipadas** com TypeScript. Eis por que você deveria considerar usá-la:
